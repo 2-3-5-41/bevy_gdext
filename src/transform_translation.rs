@@ -7,7 +7,11 @@ pub trait GodotTransformTranslation {
 impl GodotTransformTranslation for bevy::prelude::Transform {
     fn to_godot_transform(self) -> godot::prelude::Transform3D {
         let [x, y, z, w] = self.rotation.to_array();
-        let quat = Quaternion::new(x, y, z, w);
+        let mut quat = Quaternion::new(0.0, 0.0, 0.0, 1.0);
+        if !x.is_nan() || !y.is_nan() || !z.is_nan() || !w.is_nan() {
+            // `NaN` in a Quaternion causes app to panic.
+            quat = Quaternion::new(x, y, z, w);
+        }
 
         let [x, y, z] = self.scale.to_array();
         let scale = Vector3::new(x, y, z);

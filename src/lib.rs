@@ -1,11 +1,11 @@
 pub mod prelude {
-    pub use super::bevy_utility::*;
-    pub use super::godot_puppets::*;
+    pub use super::transform_translation::*;
     pub use super::godot_ref::*;
     pub use super::godot_scene_tree::*;
+    pub use super::puppet::*;
 }
 
-mod bevy_utility;
-mod godot_puppets;
+mod transform_translation;
 mod godot_ref;
 mod godot_scene_tree;
+mod puppet;

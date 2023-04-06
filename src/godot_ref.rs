@@ -1,4 +1,4 @@
-use godot::prelude::{godot_error, Gd, GodotClass, InstanceId};
+use godot::prelude::{godot_error, Gd, GodotClass, InstanceId, Node};
 
 #[derive(Clone, Debug)]
 pub struct GodotRef(InstanceId);
@@ -13,5 +13,8 @@ impl GodotRef {
             godot_error!("Could not grab `GodotRef`!");
             return None;
         };
+    }
+    pub fn free(&self) {
+        self.get::<Node>().free();
     }
 }
