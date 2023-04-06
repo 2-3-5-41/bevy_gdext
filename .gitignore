@@ -1,2 +1,4 @@
 /target/
 /Cargo.lock
+/examples/*/rust/target
+/examples/*/rust/Cargo.lock
