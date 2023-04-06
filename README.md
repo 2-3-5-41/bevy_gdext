@@ -15,3 +15,64 @@ This crate was originally created to be the foundation of a current XR project t
 ## Contribution
 
 All I ask; if you are wanting to help get all the 'base' features in place, and then some, try to fall in line with regular rust conventions, and mimic the rest of the API's namings and what nots. As this crate grows, contribution guidelines will change to be more scrutinizing for the sake of consistency and platform compatibility.
+
+## Basic example
+
+Make sure you have these dependencies in your `Cargo.toml`
+
+```toml
+
+[lib]
+crate-type = ["cdylib"] # As per the `godot-rust/gdext` setup.
+
+[dependencies]
+bevy_gdext = { git = "https://github.com/2-3-5-41/bevy_gdext.git" }
+bevy = { version = "0.10.0", default-features = false } # Disable `default-features` since Godot will be doing all the rendering.
+godot = { git = "https://github.com/2-3-5-41/gdext.git" } # My fork if you wish to use the `dont-run-in-editor!` and `editor-hint!` macros. If not, use the other `godot` dependency.
+# godot = { git = "https://github.com/godot-rust/gdext.git" }
+
+```
+
+```rust
+
+use godot::prelude::{*, Node as GDNode};
+use bevy::prelude::*;
+use bevy_gdext::prelude::*;
+
+struct MyBevyApp;
+
+#[gdextension]
+unsafe impl ExtensionLibrary for MyBevyApp {}
+
+#[derive(GodotClass)]
+#[class(base = Node)]
+pub struct World {
+    app: App,
+
+    #[base]
+    base: Base<Node>,
+}
+
+#[godot_api]
+impl NodeVirtual for World {
+    fn init(base: Base<Node>) -> Self {
+        Self {
+            app: App::new(),
+            base,
+        }
+    }
+    fn ready(&mut self) {
+        self.app
+            .add_plugins(MinimalPlugins)
+            .add_plugin(GodotSceneTreePlugin)
+            .setup()
+    }
+    fn process(&mut self, _delta: f64) {
+        dont_run_in_editor!(); // Macro provided by custom fork.
+
+        // If using regular `godot-rust/gdext` dep;
+        // if Engine::singleton().is_editor_hint() { return }
+
+        self.app.update();
+    }
+}
