@@ -9,4 +9,4 @@ crate-type = ["rlib", "cdylib"]
 
 [dependencies]
 bevy = { version = "0.10.0", default-features = false }
-godot = { git = "https://github.com/2-3-5-41/gdext.git" }
+godot = { git = "https://github.com/godot-rust/gdext.git" }
